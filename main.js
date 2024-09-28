@@ -1,17 +1,17 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-// Use your Telegram bot token here
+// Your Telegram bot token
 const token = '7576389364:AAECruCAUs9UGz7z0gZdQ9N_cR90BYDPRUs';
 
-// Create a bot that uses 'polling' to fetch new updates
+// Create a bot using 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 
-// Handle '/start' command to welcome users
+// Handle '/start' command when a user starts the bot
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
 
-    // Send a message with an inline keyboard button
-    bot.sendMessage(chatId, 'Welcome to BNB Giveaway platform! Complete tasks to get BNB gift ✅', {
+    // Send a welcome message with an inline keyboard button
+    bot.sendMessage(chatId, 'Welcome to the BNB Giveaway platform! Complete tasks to get BNB gift ✅', {
         reply_markup: {
             inline_keyboard: [
                 // Button that redirects users to the giveaway page
@@ -21,7 +21,7 @@ bot.onText(/\/start/, (msg) => {
     });
 });
 
-// Optional: Handle callback queries if buttons require interaction
+// Optional: Handle callback queries if buttons need interaction
 bot.on('callback_query', (callbackQuery) => {
     const message = callbackQuery.message;
     bot.answerCallbackQuery(callbackQuery.id)
