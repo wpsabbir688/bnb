@@ -1,31 +1,35 @@
-const TelegramBot = require('node-telegram-bot-api');
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-// Your Telegram bot token
-const token = '7576389364:AAECruCAUs9UGz7z0gZdQ9N_cR90BYDPRUs';
+# Your Telegram bot token
+TOKEN = '7576389364:AAECruCAUs9UGz7z0gZdQ9N_cR90BYDPRUs'
 
-// Create a bot using 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
+# Define the start function that handles the /start command
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # Create the inline button to open the web app
+    keyboard = [
+        [InlineKeyboardButton("Start Now", web_app={"url": "https://bnb.plutonbit.com"})]
+    ]
+    
+    # Create the inline keyboard markup
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    # Send the message with the button
+    await update.message.reply_text(
+        'Welcome to the BNB Giveaway platform! Complete tasks to get BNB gift ✅',
+        reply_markup=reply_markup
+    )
 
-// Handle '/start' command when a user starts the bot
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
+# Main function to start the bot
+def main():
+    # Set up the application with the bot token
+    application = ApplicationBuilder().token(TOKEN).build()
 
-    // Send a welcome message with an inline keyboard button
-    bot.sendMessage(chatId, 'Welcome to the BNB Giveaway platform! Complete tasks to get BNB gift ✅', {
-        reply_markup: {
-            inline_keyboard: [
-                // Button that redirects users to the giveaway page
-                [{ text: 'Start', url: 'https://news.plutonbit.com/bnb-giveaway' }]
-            ]
-        }
-    });
-});
+    # Register the /start command handler
+    application.add_handler(CommandHandler("start", start))
 
-// Optional: Handle callback queries if buttons need interaction
-bot.on('callback_query', (callbackQuery) => {
-    const message = callbackQuery.message;
-    bot.answerCallbackQuery(callbackQuery.id)
-      .then(() => {
-        bot.sendMessage(message.chat.id, 'You clicked a button!');
-      });
-});
+    # Start the bot
+    application.run_polling()
+
+if __name__ == '__main__':
+    main()
